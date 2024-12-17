@@ -105,7 +105,7 @@ public class MapService {
                 public void setBlock(Block type) {
                     super.setBlock(type);
 
-                    int c = MapIO.colorFor(block(), Blocks.air, Blocks.air, team());
+                    int c = conv(MapIO.colorFor(block(), Blocks.air, Blocks.air, team()));
                     if (c != black && c != 0) {
                         try {
                             for (int offsetX = 0; offsetX < SCALE; offsetX++) {
@@ -176,20 +176,22 @@ public class MapService {
                 @Override
                 public Tile create(int x, int y, int floorID, int overlayID, int wallID) {
                     if (overlayID != 0) {
+                        var color = conv(MapIO.colorFor(Blocks.air, Blocks.air, Vars.content.block(overlayID), Team.derelict));
                         for (int offsetX = 0; offsetX < SCALE; offsetX++) {
                             for (int offsetY = 0; offsetY < SCALE; offsetY++) {
                                 try {
-                                    floors.setRGB(x * SCALE + offsetX, floors.getHeight() - SCALE - y * SCALE - offsetY, conv(MapIO.colorFor(Blocks.air, Blocks.air, Vars.content.block(overlayID), Team.derelict)));
+                                    floors.setRGB(x * SCALE + offsetX, floors.getHeight() - SCALE - y * SCALE - offsetY, color);
                                 } catch (Exception e) {
                                     log.error("Can not read map", e);
                                 }
                             }
                         }
                     } else {
+                        var color = conv(MapIO.colorFor(Blocks.air, Vars.content.block(floorID), Blocks.air, Team.derelict));
                         for (int offsetX = 0; offsetX < SCALE; offsetX++) {
                             for (int offsetY = 0; offsetY < SCALE; offsetY++) {
                                 try {
-                                    floors.setRGB(x * SCALE + offsetX, floors.getHeight() - SCALE - y * SCALE - offsetY, conv(MapIO.colorFor(Blocks.air, Vars.content.block(floorID), Blocks.air, Team.derelict)));
+                                    floors.setRGB(x * SCALE + offsetX, floors.getHeight() - SCALE - y * SCALE - offsetY, color);
                                 } catch (Exception e) {
                                     log.error("Can not read map", e);
                                 }
