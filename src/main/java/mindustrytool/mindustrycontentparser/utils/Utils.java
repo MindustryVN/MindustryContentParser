@@ -36,6 +36,10 @@ public class Utils {
         return Base64Coder.decode(new String(data));
     }
 
+    public static String imageToBase64(BufferedImage image) {
+        return "data:image/webp;base64," + Base64Coder.encodeLines(Utils.toByteArray(image));
+    }
+
     public static synchronized byte[] toByteArray(BufferedImage image) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -75,7 +75,7 @@ public class SchematicService {
         var schematic = parseDecodedSchematic(data);
         BufferedImage image = getSchematicImage(schematic);
 
-        String str = Base64Coder.encodeLines(Utils.toByteArray(image));
+        String str = Utils.imageToBase64(image);
 
         SchematicPreviewResult result = new SchematicPreviewResult()//
                 .setName(schematic.name())//
