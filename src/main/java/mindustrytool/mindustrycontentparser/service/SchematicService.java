@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.util.zip.InflaterInputStream;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Component;
 
 import arc.graphics.g2d.Draw;
@@ -18,7 +17,6 @@ import arc.struct.IntMap;
 import arc.struct.Seq;
 import arc.struct.StringMap;
 import arc.util.io.Reads;
-import arc.util.serialization.Base64Coder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mindustry.Vars;
@@ -56,19 +54,9 @@ public class SchematicService {
     private final AssetsService assetsService;
 
     public Mono<SchematicPreviewResult> getPreview(SchematicPreviewRequest request) {
+        var result = getPreview(request.getData());
 
-        if (request.getFile() != null)
-            return getPreview(request.getFile());
-
-        if (request.getCode() != null && !request.getCode().isEmpty())
-            return getPreview(Base64Coder.decode(request.getCode()));
-
-        throw new ApiError(HttpStatus.BAD_REQUEST, "No schematic provided");
-    }
-
-    private Mono<SchematicPreviewResult> getPreview(FilePart file) {
-        return Utils.readAllBytes(file)//
-                .flatMap(bytes -> getPreview(bytes));
+        return result;
     }
 
     private Mono<SchematicPreviewResult> getPreview(byte[] data) {

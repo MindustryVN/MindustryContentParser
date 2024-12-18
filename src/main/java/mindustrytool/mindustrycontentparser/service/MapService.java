@@ -39,23 +39,18 @@ public class MapService {
     private static int SCALE = 8;
 
     public Mono<MapPreviewResult> getPreview(MapPreviewRequest request) {
-        return Utils.readAllBytes(request.getFile()).map(bytes -> {
+        Map map = parseDecodedMap(request.getData());
 
-            Map map = parseDecodedMap(bytes);
+        var result = new MapPreviewResult()//
+                .setAuthor(map.author)//
+                .setDescription(map.description)//
+                .setHeight(map.height)//
+                .setImage(Utils.imageToBase64(map.image))//
+                .setName(map.name)//
+                .setTags(map.tags)//
+                .setWidth(map.width);
 
-            return new MapPreviewResult()//
-                    .setAuthor(map.author)//
-                    .setDescription(map.description)//
-                    .setHeight(map.height)//
-                    .setImage(Utils.imageToBase64(map.image))//
-                    .setName(map.name)//
-                    .setTags(map.tags)//
-                    .setWidth(map.width);
-        });
-    }
-
-    public synchronized Map parseEncodedMap(byte[] data) {
-        return parseDecodedMap(Utils.decode(data));
+        return Mono.just(result);
     }
 
     public synchronized Map parseDecodedMap(byte[] data) {
