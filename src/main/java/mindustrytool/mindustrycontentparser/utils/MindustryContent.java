@@ -6,25 +6,31 @@ import arc.graphics.*;
 import arc.graphics.g2d.*;
 import arc.graphics.g2d.TextureAtlas.AtlasRegion;
 import arc.graphics.g2d.TextureAtlas.TextureAtlasData;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import mindustry.*;
 import mindustry.core.*;
+import mindustry.mod.Mods;
 import mindustry.world.*;
 import mindustrytool.mindustrycontentparser.EnvConfig;
 
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class MindustryContent {
 
+    public final String schemHeader = Vars.schematicBaseStart;
+
     private final EnvConfig config;
+    private final DrawBatch drawBatch;
 
-    public static final String schemHeader = Vars.schematicBaseStart;
-
-    public MindustryContent(DrawBatch drawBatch, EnvConfig config) {
-        this.config = config;
+    @PostConstruct
+    public void init() {
 
         Vars.content = new ContentLoader();
         Vars.content.createBaseContent();
+        Vars.mods = new Mods();
 
         Utils.runIgnoreError(Vars.content::init);
 
@@ -45,6 +51,11 @@ public class MindustryContent {
 
         Lines.useLegacyLine = true;
         Draw.scl = 1f / 4f;
+
+        Vars.modDirectory = new Fi(config.files().modsFolder());
+        Vars.modDirectory.mkdirs();
+
+        Vars.mods.load();
     }
 
     private void loadBlockColors() {
