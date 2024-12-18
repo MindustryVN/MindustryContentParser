@@ -7,6 +7,7 @@ RUN gradle build --no-daemon
 
 FROM eclipse-temurin:22-jre-alpine
 
+COPY --from=build /home/gradle/src/mods /app/mods
 COPY --from=build /home/gradle/src/mindustry /app/mindustry
 COPY --from=build /home/gradle/src/src/main/resources/application.properties /app/application.properties
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
