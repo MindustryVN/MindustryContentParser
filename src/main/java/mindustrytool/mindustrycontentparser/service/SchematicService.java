@@ -54,7 +54,7 @@ public class SchematicService {
     private final AssetsService assetsService;
 
     public Mono<SchematicPreviewResult> getPreview(SchematicPreviewRequest request) {
-        var result = getPreview(request.getData());
+        var result = getPreview(Utils.decode(request.getData()));
 
         return result;
     }
@@ -63,7 +63,7 @@ public class SchematicService {
         var schematic = parseDecodedSchematic(data);
         BufferedImage image = getSchematicImage(schematic);
 
-        String str = Utils.imageToBase64(image);
+        var str = Utils.imageToBase64(image);
 
         SchematicPreviewResult result = new SchematicPreviewResult()//
                 .setName(schematic.name())//
@@ -85,7 +85,7 @@ public class SchematicService {
         try {
             return read(new ByteArrayInputStream(data));
         } catch (IOException e) {
-            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to read schematic from byte", e);
+            throw new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to read schematic from byte: " + new String(data), e);
         }
     }
 

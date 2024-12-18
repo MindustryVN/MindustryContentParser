@@ -39,7 +39,7 @@ public class MapService {
     private static int SCALE = 8;
 
     public Mono<MapPreviewResult> getPreview(MapPreviewRequest request) {
-        Map map = parseDecodedMap(request.getData());
+        Map map = parseDecodedMap(Utils.decode(request.getData()));
 
         var result = new MapPreviewResult()//
                 .setAuthor(map.author)//
@@ -103,11 +103,6 @@ public class MapService {
                     int c = conv(MapIO.colorFor(block(), Blocks.air, Blocks.air, team()));
                     if (c != black && c != 0) {
                         try {
-                            for (int offsetX = 0; offsetX < SCALE; offsetX++) {
-                                for (int offsetY = 0; offsetY < SCALE; offsetY++) {
-                                    walls.setRGB(x * SCALE + offsetX, floors.getHeight() - SCALE - y * SCALE - offsetY, c);
-                                }
-                            }
 
                             fgraphics.setColor(jcolor);
                             fgraphics.drawRect(x * SCALE, floors.getHeight() - SCALE - y * SCALE - SCALE, SCALE, SCALE);

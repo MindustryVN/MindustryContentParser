@@ -33,11 +33,11 @@ public class Utils {
     }
 
     public static byte[] decode(byte[] data) {
-        return Base64Coder.decode(new String(data));
+        return Base64Coder.decode(new String(data, StandardCharsets.UTF_8));
     }
 
     public static String imageToBase64(BufferedImage image) {
-        return "data:image/webp;base64," + Base64Coder.encodeLines(Utils.toByteArray(image));
+        return Base64Coder.encodeLines(Utils.toByteArray(image));
     }
 
     public static synchronized byte[] toByteArray(BufferedImage image) {
